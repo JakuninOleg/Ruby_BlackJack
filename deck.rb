@@ -1,7 +1,7 @@
 class Deck
-  SUITS = ['♠', '♥', '♦', '♣']
-  NAMES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
-  VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 0]
+  SUITS = %w[♠ ♥ ♦ ♣].freeze
+  NAMES = %w[2 3 4 5 6 7 8 9 10 Jack Queen King Ace].freeze
+  VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 1].freeze
 
   attr_accessor :cards
 
@@ -12,7 +12,9 @@ class Deck
 
   def create_deck
     SUITS.each do |suit|
-      NAMES.each_with_index { |name, index| @cards << Card.new(name, suit, VALUES[index]) }
+      NAMES.each_with_index do |name, index|
+        @cards << Card.new(name, suit, VALUES[index])
+      end
     end
   end
 
@@ -20,5 +22,3 @@ class Deck
     @deck.shuffle!
   end
 end
-
-

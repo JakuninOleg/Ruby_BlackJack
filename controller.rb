@@ -5,9 +5,9 @@ class Controller
     @dealer = Dealer.new
   end
 
-  def initial_deal
+  def initial_deal(user)
     card = @deck.cards.sample
-    @player.current_cards << card
+    user.current_cards << card
     @deck.cards.delete(card)
   end
 
@@ -16,9 +16,13 @@ class Controller
     @player.name = @view.ask_player_name
     @view.greeting(@player.name)
     create_new_deck
-    2.times { initial_deal }
+    2.times { initial_deal(@player) }
+    2.times { initial_deal(@dealer) }
+    @player.bet!
+    @dealer.bet!
     @view.show__player_cards(@player)
     @view.show_score(@player)
+    @view.show_dealer_cards(@dealer)
   end
 
   def create_new_deck
