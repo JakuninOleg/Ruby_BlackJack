@@ -12,8 +12,13 @@ class Controller
   end
 
   def start_game
+    @view.game_info
+    @player.name = @view.ask_player_name
+    @view.greeting(@player.name)
     create_new_deck
     2.times { initial_deal }
+    @view.show__player_cards(@player)
+    @view.show_score(@player)
   end
 
   def create_new_deck
