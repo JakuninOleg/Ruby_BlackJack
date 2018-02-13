@@ -1,26 +1,31 @@
 class Router
   def initialize(controller)
     @controller = controller
-    @running = true
+    # @running = true
   end
-
-  # METHODS = { 1 =>
-
-  # }
 
   def run
     @controller.start_game
-    # while @running
-    # end
+    choice = @controller.player_turn
+    while @controller.game_on?
+      case choice
+      when 'Пропуск'
+        @controller.player_skip_turn!
+        @controller.dealer_turn
+        choice = @controller.player_turn
+      when 'Взять карту'
+        @controller.player_take_card!
+        @controller.dealer_turn
+      when 'Открыться'
+        break
+      end
+    end
+    @controller.finish_round
   end
 
-  def stop!
-    @running = false
-  end
+  private
 
-  def display_actions
-    puts '1 - Пропуск хода'
-    puts '2 - Взять карту'
-    puts '3 - Открыть карты'
-  end
+  # def stop!
+  #   @running = false
+  # end
 end

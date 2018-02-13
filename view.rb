@@ -17,12 +17,12 @@ class View
 
   def greeting(player_name)
     puts
-    puts "Приветствуем, #{player_name} - в игре Ruby BlackJack!"
+    puts "Приветствуем, #{player_name}! Игра началась."
     line2
     puts
   end
 
-  def show__player_cards(player)
+  def show_player_cards(player)
     puts 'Ваши карты:'
     player.current_cards.each { |card| print "#{card.suit}#{card.name} " }
     puts
@@ -36,10 +36,29 @@ class View
   end
 
   def show_dealer_cards(dealer)
-    puts "Карты диллера: "
-    dealer.cards
+    puts 'Карты диллера:'
+    dealer.current_cards.each { |card| print "#{card.suit}#{card.name} " }
     puts
   end
+
+  def show_closed_dealer_cards(dealer)
+    puts 'Карты диллера:'
+    dealer.current_cards.each { print '* ' }
+    puts
+    line2
+    puts
+  end
+
+  def show_game_options(controller)
+    puts "Выберите действие:"
+    controller.game_options_array.each_with_index do |option, index|
+      puts "#{index + 1} - #{option}"
+    end
+    print '>'
+    controller.game_options_array[gets.chomp.to_i - 1]
+  end
+
+  private
 
   def line
     puts '============================================'
