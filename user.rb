@@ -1,6 +1,6 @@
 class User
-  attr_reader :money, :current_cards, :score
-  attr_writer :current_cards
+  attr_reader :current_cards, :score
+  attr_accessor :money, :current_cards
 
   def initialize
     @money = 100
@@ -12,8 +12,6 @@ class User
     @money -= 10
   end
 
-  # private
-
   def count_score
     no_aces
     three_aces
@@ -22,6 +20,8 @@ class User
     one_ace_two_cards
     one_ace_three_cards
   end
+
+  private
 
   def cards_value
     @current_cards.map(&:value).reduce(0, :+)
@@ -32,7 +32,7 @@ class User
   end
 
   def no_aces
-    @score = cards_value
+    @score = cards_value if count_aces == 0
   end
 
   def three_aces

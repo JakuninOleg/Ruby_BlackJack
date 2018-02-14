@@ -1,11 +1,10 @@
 class Controller
-  attr_reader :game_options_array, :player
+  attr_reader :game_options_array, :player, :dealer
 
   def initialize
     @view = View.new
     @player = Player.new
     @dealer = Dealer.new
-    @game_options_array = ['Пропуск', 'Взять карту', 'Открыться']
   end
 
   def start_game
@@ -13,11 +12,18 @@ class Controller
     @player.name = @view.ask_player_name
     @view.greeting(@player.name)
     @view.show_player_balance(@player)
+  end
+
+  def start_round
+    @game_options_array = ['Пропуск', 'Взять карту', 'Открыться']
+    @player.current_cards.clear
+    @dealer.current_cards.clear
     create_new_deck
     initial_deal
     bets
     @view.show_player_cards(@player)
-    @view.show_score(@player)
+    count_users_score
+    @view.show_player_score(@player)
     @view.show_closed_dealer_cards(@dealer)
   end
 
@@ -32,33 +38,76 @@ class Controller
   def player_take_card!
     @game_options_array.delete('Взять карту')
     take_card(@player)
+    @view.player_took_card(@player)
+    @player.count_score
   end
 
   def dealer_turn
     take_card(@dealer) if @dealer.score < 17
+    @dealer.count_score
+    @view.dealer_took_card unless dealer_score_exceed?
   end
 
   def finish_round
     @view.show_player_cards(@player)
-    @view.show_score(@player)
+    @view.show_player_score(@player)
     @view.show_dealer_cards(@dealer)
-    @view.show_score(@dealer)
+    @view.show_dealer_score(@dealer)
+    instant_lose_player
+    instant_lose_dealer
     round_winner
+    @view.show_player_balance(@player)
   end
 
   def round_winner
+    return if score_exceed?
     if @dealer.score > @player.score
-      @view.dealer_winner_message
-      @dealer.money += 20
+      dealer_win
     elsif @player.score > @dealer.score
-      @view.player_winner_message
-      @player.money += 20
+      player_win
     else
-      @dealer.money += 10
-      @player.money += 10
-      @view.draw_message
+      draw
     end
-    @view.show_player_balance(@player)
+  end
+
+  def instant_lose_player
+    return unless @player.score > 21
+    @view.too_much_value_player
+    dealer_win
+  end
+
+  def instant_lose_dealer
+    return unless @dealer.score > 21
+    @view.too_much_value_dealer
+    player_win
+  end
+
+  def player_score_exceed?
+    @player.score > 21
+  end
+
+  def dealer_score_exceed?
+    @dealer.score > 21
+  end
+
+  def score_exceed?
+     player_score_exceed? || dealer_score_exceed?
+  end
+
+  def player_win
+    @view.player_winner_message
+    @player.money += 30
+  end
+
+  def dealer_win
+    @view.dealer_winner_message
+    @dealer.money += 30
+  end
+
+  def draw
+    @dealer.money += 20
+    @player.money += 20
+    @view.draw_message
   end
 
   def game_on?
@@ -78,6 +127,11 @@ class Controller
   end
 
   private
+
+  def count_users_score
+    @player.count_score
+    @dealer.count_score
+  end
 
   def take_card(user)
     card = @deck.cards[0]
@@ -103,7 +157,7 @@ class Controller
   def player_take_card
     take_card(@player)
     @game_options_array.delete('Пропуск')
-    @view.show__player_cards(@player)
+    @view.show_player_cards(@player)
     @view.show_score(@player)
   end
 end

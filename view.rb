@@ -28,11 +28,37 @@ class View
     puts
   end
 
-  def show_score(user)
+  def show_player_score(player)
     line2
-    puts "Ваш счёт: #{user.score}"
+    puts "Ваш счёт: #{player.score}"
     line2
     puts
+  end
+
+  def show_dealer_score(dealer)
+    line2
+    puts "Счёт дилера: #{dealer.score}"
+    line2
+    puts
+  end
+
+  def player_took_card(player)
+    puts
+    puts "Вы вытянули карту #{player.last_card}"
+  end
+
+  def dealer_took_card
+    puts
+    puts 'Дилер успешно взял карту'
+    puts
+  end
+
+  def too_much_value_player
+    puts 'Вы набрали слишком много очков!'
+  end
+
+  def too_much_value_dealer
+    puts 'Дилер набрал слишком много очков!'
   end
 
   def show_dealer_cards(dealer)
@@ -50,7 +76,7 @@ class View
   end
 
   def show_game_options(controller)
-    puts "Выберите действие:"
+    puts 'Выберите действие:'
     controller.game_options_array.each_with_index do |option, index|
       puts "#{index + 1} - #{option}"
     end
@@ -59,15 +85,15 @@ class View
   end
 
   def dealer_winner_message
-    puts "Победа диллера!"
+    puts 'Победа диллера!'
   end
 
   def player_winner_message
-    puts "Вы одержали победу!"
+    puts 'Вы одержали победу!'
   end
 
   def draw_message
-    puts "Ничья. Деньги возвращены."
+    puts 'Ничья. Деньги возвращены.'
   end
 
   def show_dealer_balance(dealer)

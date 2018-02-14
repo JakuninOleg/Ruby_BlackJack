@@ -1,7 +1,7 @@
 class Deck
   SUITS = %w[♠ ♥ ♦ ♣].freeze
   NAMES = %w[2 3 4 5 6 7 8 9 10 Jack Queen King Ace].freeze
-  VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11].freeze
+  VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 0].freeze
 
   attr_accessor :cards
 
