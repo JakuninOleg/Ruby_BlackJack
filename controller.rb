@@ -1,5 +1,4 @@
 class Controller
-  BANK = 20
   attr_reader :game_options_array, :player
 
   def initialize
@@ -13,6 +12,7 @@ class Controller
     @view.game_info
     @player.name = @view.ask_player_name
     @view.greeting(@player.name)
+    @view.show_player_balance(@player)
     create_new_deck
     initial_deal
     bets
@@ -43,6 +43,22 @@ class Controller
     @view.show_score(@player)
     @view.show_dealer_cards(@dealer)
     @view.show_score(@dealer)
+    round_winner
+  end
+
+  def round_winner
+    if @dealer.score > @player.score
+      @view.dealer_winner_message
+      @dealer.money += 20
+    elsif @player.score > @dealer.score
+      @view.player_winner_message
+      @player.money += 20
+    else
+      @dealer.money += 10
+      @player.money += 10
+      @view.draw_message
+    end
+    @view.show_player_balance(@player)
   end
 
   def game_on?

@@ -19,10 +19,10 @@ class View
     puts
     puts "Приветствуем, #{player_name}! Игра началась."
     line2
-    puts
   end
 
   def show_player_cards(player)
+    puts
     puts 'Ваши карты:'
     player.current_cards.each { |card| print "#{card.suit}#{card.name} " }
     puts
@@ -56,6 +56,26 @@ class View
     end
     print '>'
     controller.game_options_array[gets.chomp.to_i - 1]
+  end
+
+  def dealer_winner_message
+    puts "Победа диллера!"
+  end
+
+  def player_winner_message
+    puts "Вы одержали победу!"
+  end
+
+  def draw_message
+    puts "Ничья. Деньги возвращены."
+  end
+
+  def show_dealer_balance(dealer)
+    puts "Баланс дилера: #{dealer.money}$"
+  end
+
+  def show_player_balance(player)
+    puts "Ваш баланс: #{player.money}$"
   end
 
   private
