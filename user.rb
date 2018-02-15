@@ -13,55 +13,28 @@ class User
   end
 
   def count_score
-    no_aces
-    three_aces
-    two_aces_two_cards
-    two_aces_three_cards
-    one_ace_two_cards
-    one_ace_three_cards
+    no_aces_score
+    aces_score
   end
 
   private
 
-  def cards_value
-    @current_cards.map(&:value).reduce(0, :+)
+  def no_aces_score
+    @score = @current_cards.map(&:value).reduce(0, :+)
   end
 
-  def count_aces
-    current_cards.count { |card| card.name == 'Ace' }
+  def score_array
+    aces, non_aces = current_cards.partition { |card| card.ace? }
+    base_value = non_aces.sum { |card| card.value } + aces.size
+    score_array = (aces.size + 1).times.map { |high_aces| base_value + 10 * high_aces }
+    score_array.select { |x| x <= 21 }.max
   end
 
-  def no_aces
-    @score = cards_value if count_aces.zero?
+  def aces_score
+    @score = score_array if aces?
   end
 
-  def three_aces
-    @score = 13 if count_aces == 3
-  end
-
-  def two_aces_two_cards
-    return unless count_aces == 2
-    return unless current_cards.size == 2
-    @score = 12
-  end
-
-  def two_aces_three_cards
-    return unless count_aces == 2
-    return unless current_cards.size == 3
-    @score = cards_value + 12
-    @score = 12 if current_cards.any? { |card| card.value == 10 }
-  end
-
-  def one_ace_two_cards
-    return unless count_aces == 1
-    return unless current_cards.size == 2
-    @score = cards_value + 11
-  end
-
-  def one_ace_three_cards
-    return unless count_aces == 1
-    return unless current_cards.size == 3
-    @score = cards_value + 1
-    @score = cards_value + 11 if cards_value <= 10
+  def aces?
+    current_cards.any? { |card| card.ace? }
   end
 end

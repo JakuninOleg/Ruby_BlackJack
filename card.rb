@@ -7,4 +7,8 @@ class Card
     @suit = suit
     @value = value
   end
+
+  def ace?
+    name == 'Ace'
+  end
 end

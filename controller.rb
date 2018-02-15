@@ -34,10 +34,10 @@ class Controller
   def finish_round
     @view.show_player_cards(@player)
     @view.show_player_score(@player)
-    sleep 2
+    sleep 1
     @view.show_dealer_cards(@dealer)
     @view.show_dealer_score(@dealer)
-    sleep 2
+    sleep 1
     instant_lose_player
     instant_lose_dealer
     round_winner
@@ -133,7 +133,7 @@ class Controller
   # boolean methods
 
   def player_score_exceed?
-    @player.score > 21
+    @player.score  > 21
   end
 
   def dealer_score_exceed?
