@@ -27,7 +27,7 @@ class User
     aces, non_aces = current_cards.partition(&:ace?)
     base_value = non_aces.sum(&:value) + aces.size
     score_array = Array.new(aces.size + 1) { |high_aces| base_value + 10 * high_aces }
-    score_array.select { |x| x <= 21 }.max
+    score_array.select { |score| score <= 21 }.max
   end
 
   def aces_score
