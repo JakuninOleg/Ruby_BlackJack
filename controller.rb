@@ -133,7 +133,7 @@ class Controller
   # boolean methods
 
   def player_score_exceed?
-    @player.score  > 21
+    @player.score > 21
   end
 
   def dealer_score_exceed?
