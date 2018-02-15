@@ -1,6 +1,8 @@
 class Controller
   attr_reader :game_options_array, :player, :dealer, :view
 
+  # game and round methods
+
   def initialize
     @view = View.new
     @player = Player.new
@@ -19,41 +21,23 @@ class Controller
     @player.current_cards.clear
     @dealer.current_cards.clear
     create_new_deck
-    initial_deal
     bets
+    @view.new_deal(@player)
+    sleep 2
+    initial_deal
     @view.show_player_cards(@player)
     count_users_score
     @view.show_player_score(@player)
     @view.show_closed_dealer_cards(@dealer)
   end
 
-  def player_turn
-    @view.show_round_options(self)
-  end
-
-  def player_skip_turn!
-    @game_options_array.delete('Пропуск')
-    @view.player_skipped_turn
-  end
-
-  def player_take_card!
-    @game_options_array.delete('Взять карту')
-    take_card(@player)
-    @view.player_took_card(@player)
-    @player.count_score
-  end
-
-  def dealer_turn
-    take_card(@dealer) if @dealer.score < 17
-    @dealer.count_score
-    @view.dealer_took_card unless dealer_score_exceed?
-  end
-
   def finish_round
     @view.show_player_cards(@player)
     @view.show_player_score(@player)
+    sleep 2
     @view.show_dealer_cards(@dealer)
     @view.show_dealer_score(@dealer)
+    sleep 2
     instant_lose_player
     instant_lose_dealer
     round_winner
@@ -71,6 +55,12 @@ class Controller
     end
   end
 
+  def draw
+    @dealer.money += 10
+    @player.money += 10
+    @view.draw_message
+  end
+
   def instant_lose_player
     return unless @player.score > 21
     @view.too_much_value_player
@@ -82,6 +72,65 @@ class Controller
     @view.too_much_value_dealer
     player_win
   end
+
+  def player_leave
+    @view.player_leave(@player)
+  end
+
+  def player_lost_game
+    @view.dealer_win_game if @player.money.zero?
+  end
+
+  def player_won_game
+    @view.player_win_game(@player) if @dealer.money.zero?
+  end
+
+  # player methods
+
+  def player_turn
+    @view.show_round_options(self)
+  end
+
+  def player_skip_turn!
+    print `clear`
+    @game_options_array.delete('Пропуск')
+    @view.player_skipped_turn
+  end
+
+  def player_take_card!
+    print `clear`
+    @game_options_array.delete('Взять карту')
+    take_card(@player)
+    @view.player_took_card(@player)
+    @player.count_score
+  end
+
+  def player_win
+    @view.player_winner_message
+    @player.money += 20
+  end
+
+  def show_player_cards
+    return if dealer_score_exceed?
+    @view.show_player_cards(@player)
+    @view.show_player_score(@player)
+  end
+
+  # dealer methods
+
+  def dealer_turn
+    take_card(@dealer) if @dealer.score < 17
+    @dealer.count_score
+    @view.dealer_took_card if @dealer.current_cards.size == 3
+    @view.dealer_skipped if @dealer.current_cards.size == 2
+  end
+
+  def dealer_win
+    @view.dealer_winner_message
+    @dealer.money += 20
+  end
+
+  # boolean methods
 
   def player_score_exceed?
     @player.score > 21
@@ -96,27 +145,7 @@ class Controller
   end
 
   def empty_pockets?
-    player.money == 0 || dealer.money == 0
-  end
-
-  def player_win
-    @view.player_winner_message
-    @player.money += 30
-  end
-
-  def dealer_win
-    @view.dealer_winner_message
-    @dealer.money += 30
-  end
-
-  def draw
-    @dealer.money += 20
-    @player.money += 20
-    @view.draw_message
-  end
-
-  def game_on?
-    normal_score? && not_skipped? && not_full_hand?
+    player.money.zero? || dealer.money.zero?
   end
 
   def normal_score?
@@ -128,7 +157,11 @@ class Controller
   end
 
   def not_full_hand?
-    @player.current_cards.size < 3 && @dealer.current_cards.size < 3
+    @player.current_cards.size < 3 && @dealer.current_cards.size <= 3
+  end
+
+  def game_on?
+    normal_score? && not_skipped? && not_full_hand?
   end
 
   private

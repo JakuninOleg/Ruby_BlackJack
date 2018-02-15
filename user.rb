@@ -1,6 +1,6 @@
 class User
   attr_reader :current_cards, :score
-  attr_accessor :money, :current_cards
+  attr_accessor :money
 
   def initialize
     @money = 100
@@ -32,7 +32,7 @@ class User
   end
 
   def no_aces
-    @score = cards_value if count_aces == 0
+    @score = cards_value if count_aces.zero?
   end
 
   def three_aces
@@ -65,4 +65,3 @@ class User
     @score = cards_value + 11 if cards_value <= 10
   end
 end
-
