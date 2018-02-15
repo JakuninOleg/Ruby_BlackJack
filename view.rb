@@ -3,8 +3,8 @@ class View
     print `clear`
     line
     puts 'Приветствуем в игре Ruby BlackJack!'
-    puts 'Если ты готов испытать удачу и сорвать'
-    puts 'куш, скорее вводи имя и давай начнём!'
+    puts 'Если Вы готовы испытать удачу и сорвать'
+    puts 'куш, скорее вводите имя и давай начнём!'
     line
     puts
   end
@@ -19,6 +19,15 @@ class View
     puts
     puts "Приветствуем, #{player_name}! Игра началась."
     line2
+  end
+
+  def show_game_options
+    line2
+    puts 'Хотите продолжить игру?'
+    puts '1 - Да'
+    puts '2 - Нет'
+    print '>'
+    gets.chomp.to_i
   end
 
   def show_player_cards(player)
@@ -40,6 +49,16 @@ class View
     puts "Счёт дилера: #{dealer.score}"
     line2
     puts
+  end
+
+  def player_skipped_turn
+    puts
+    puts 'Вы пропускаете ход'
+  end
+
+  def player_opened
+    puts
+    puts 'Вы решили открыться'
   end
 
   def player_took_card(player)
@@ -75,7 +94,7 @@ class View
     puts
   end
 
-  def show_game_options(controller)
+  def show_round_options(controller)
     puts 'Выберите действие:'
     controller.game_options_array.each_with_index do |option, index|
       puts "#{index + 1} - #{option}"
@@ -90,6 +109,22 @@ class View
 
   def player_winner_message
     puts 'Вы одержали победу!'
+  end
+
+  def dealer_win_game
+    line
+    puts 'Дилер одержал сокрушительную победу!'
+    puts 'Вы уходите с пустыми карманами!'
+    puts 'Приходите снова, когда их заполните!'
+    line
+  end
+
+  def player_win_game
+    line
+    puts 'Ну надо же, Вы одержали победу над казино!'
+    puts 'Вы точно не жульничали? Поздравляем с вашим'
+    puts 'выйгрышем! Приходите в наше казино ещё!'
+    line
   end
 
   def draw_message

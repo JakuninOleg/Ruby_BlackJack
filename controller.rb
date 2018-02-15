@@ -1,5 +1,5 @@
 class Controller
-  attr_reader :game_options_array, :player, :dealer
+  attr_reader :game_options_array, :player, :dealer, :view
 
   def initialize
     @view = View.new
@@ -28,11 +28,12 @@ class Controller
   end
 
   def player_turn
-    @view.show_game_options(self)
+    @view.show_round_options(self)
   end
 
   def player_skip_turn!
     @game_options_array.delete('Пропуск')
+    @view.player_skipped_turn
   end
 
   def player_take_card!
@@ -91,7 +92,11 @@ class Controller
   end
 
   def score_exceed?
-     player_score_exceed? || dealer_score_exceed?
+    player_score_exceed? || dealer_score_exceed?
+  end
+
+  def empty_pockets?
+    player.money == 0 || dealer.money == 0
   end
 
   def player_win
