@@ -1,6 +1,6 @@
 class User
   attr_reader :current_cards, :score
-  attr_accessor :money
+  attr_accessor :money, :bet
 
   def initialize
     @money = 100
@@ -9,29 +9,21 @@ class User
   end
 
   def bet!
-    @money -= 10
+    @money -= bet
   end
 
   def count_score
-    no_aces_score
-    aces_score
+    @score = score_array
   end
 
   private
 
-  def no_aces_score
-    @score = @current_cards.map(&:value).reduce(0, :+)
-  end
-
   def score_array
     aces, non_aces = current_cards.partition(&:ace?)
     base_value = non_aces.sum(&:value) + aces.size
+    return base_value unless aces?
     score_array = Array.new(aces.size + 1) { |high_aces| base_value + 10 * high_aces }
     score_array.select { |score| score <= 21 }.max
-  end
-
-  def aces_score
-    @score = score_array if aces?
   end
 
   def aces?

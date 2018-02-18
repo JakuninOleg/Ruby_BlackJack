@@ -56,8 +56,8 @@ class Controller
   end
 
   def draw
-    @dealer.money += 10
-    @player.money += 10
+    @dealer.money += dealer.bet
+    @player.money += player.bet
     @view.draw_message
   end
 
@@ -107,7 +107,7 @@ class Controller
 
   def player_win
     @view.player_winner_message
-    @player.money += 20
+    @player.money += player.bet + dealer.bet
   end
 
   def show_player_cards
@@ -126,8 +126,8 @@ class Controller
   end
 
   def dealer_win
-    @view.dealer_winner_message
-    @dealer.money += 20
+    @view.dealer_winner_message(@player)
+    @dealer.money += player.bet + dealer.bet
   end
 
   # boolean methods
@@ -188,6 +188,8 @@ class Controller
   end
 
   def bets
+    player.bet = @view.ask_bet_amount
+    dealer.bet = player.bet
     @player.bet!
     @dealer.bet!
   end

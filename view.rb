@@ -34,7 +34,7 @@ class View
 
   def new_deal(player)
     line2
-    puts "Ваша ставка - 10$. Ваш текущий баланс: #{player.money}$"
+    puts "Ваша ставка - #{player.bet}. Ваш текущий баланс: #{player.money}$"
     line2
     sleep 1
     puts 'Идет раздача карт'
@@ -85,6 +85,12 @@ class View
     puts "Ваш счёт: #{player.score}"
     line2
     puts
+  end
+
+  def ask_bet_amount
+    puts 'Сколько вы хотите поставить:'
+    print '>'
+    gets.chomp.to_i
   end
 
   def player_skipped_turn
@@ -156,9 +162,9 @@ class View
     puts 'Дилер набрал слишком много очков!'
   end
 
-  def dealer_winner_message
+  def dealer_winner_message(player)
     puts 'Победа диллера!'
-    puts 'Вы проиграли 10$!'
+    puts "Вы проиграли #{player.bet}!"
   end
 
   def show_dealer_balance(dealer)
