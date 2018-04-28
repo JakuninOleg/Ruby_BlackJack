@@ -78,11 +78,11 @@ class Controller
   end
 
   def player_lost_game
-    @view.dealer_win_game if @player.money.zero?
+    @view.dealer_win_game if @player.money <= 0
   end
 
   def player_won_game
-    @view.player_win_game(@player) if @dealer.money.zero?
+    @view.player_win_game(@player) if @dealer.money <= 0
   end
 
   # player methods
@@ -145,7 +145,7 @@ class Controller
   end
 
   def empty_pockets?
-    player.money.zero? || dealer.money.zero?
+    player.money <= 0 || dealer.money <= 0
   end
 
   def normal_score?
