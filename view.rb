@@ -34,7 +34,7 @@ class View
 
   def new_deal(player)
     line2
-    puts "Ваша ставка - #{player.bet}. Ваш текущий баланс: #{player.money}$"
+    puts "Ваша ставка - #{player.bet}$. Ваш текущий баланс: #{player.money}$"
     line2
     sleep 1
     puts 'Идет раздача карт'

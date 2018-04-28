@@ -13,7 +13,6 @@ class Controller
     @view.game_info
     @player.name = @view.ask_player_name
     @view.greeting(@player.name)
-    @view.show_player_balance(@player)
   end
 
   def start_round
@@ -21,6 +20,7 @@ class Controller
     @player.current_cards.clear
     @dealer.current_cards.clear
     create_new_deck
+    @view.show_player_balance(@player)
     bets
     @view.new_deal(@player)
     sleep 2
@@ -164,7 +164,7 @@ class Controller
     normal_score? && not_skipped? && not_full_hand?
   end
 
-  private
+  # private
 
   def count_users_score
     @player.count_score

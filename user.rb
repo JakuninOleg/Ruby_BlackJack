@@ -13,18 +13,11 @@ class User
   end
 
   def count_score
-    @score = score_array
+    @score = current_cards.sum(&:value)
+    @score += 10 if score < 12 && aces?
   end
 
   private
-
-  def score_array
-    aces, non_aces = current_cards.partition(&:ace?)
-    base_value = non_aces.sum(&:value) + aces.size
-    return base_value unless aces?
-    score_array = Array.new(aces.size + 1) { |high_aces| base_value + 10 * high_aces }
-    score_array.select { |score| score <= 21 }.max
-  end
 
   def aces?
     current_cards.any?(&:ace?)
